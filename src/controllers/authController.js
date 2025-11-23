@@ -104,9 +104,31 @@ const confirmPhoneVerification = async (req, res, next) => {
     }
 };
 
+const changePassword = async (req, res, next) => {
+    try {
+        const { current_password, new_password } = req.body;
+        await authService.changePassword(req.user.id, current_password, new_password);
+        res.json(createResponse(true, 'Contraseña actualizada correctamente.'));
+    } catch (error) {
+        next(error);
+    }
+};
+
+const logout = async (req, res, next) => {
+    try {
+        const { refresh_token } = req.body;
+        await authService.logout(refresh_token);
+        res.json(createResponse(true, 'Sesión cerrada correctamente.'));
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     register,
     login,
     requestPhoneVerification,
     confirmPhoneVerification,
+    changePassword,
+    logout,
 };

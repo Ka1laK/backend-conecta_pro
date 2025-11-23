@@ -149,9 +149,31 @@ const confirmPhoneVerification = async (phone_number, code) => {
     };
 };
 
+const changePassword = async (userId, currentPassword, newPassword) => {
+    const user = await User.findById(userId).select('+password');
+    if (!user) throw new AppError('User not found', 404);
+
+    const isMatch = await user.matchPassword(currentPassword);
+    if (!isMatch) throw new AppError('Contraseña actual incorrecta', 400);
+
+    user.password = newPassword; // Will be hashed by pre-save hook
+    await user.save();
+
+    return {};
+};
+
+const logout = async (refreshToken) => {
+    // In a real implementation with refresh tokens stored in DB/Redis, we would invalidate it here.
+    // Since we are using stateless JWTs (or not storing refresh tokens in this simple implementation),
+    // we just return success.
+    return {};
+};
+
 module.exports = {
     register,
     login,
     requestPhoneVerification,
     confirmPhoneVerification,
+    changePassword,
+    logout,
 };

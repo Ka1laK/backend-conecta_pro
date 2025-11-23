@@ -24,6 +24,9 @@ app.use(morgan('dev'));
 // Routes
 app.use('/auth', require('./routes/authRoutes'));
 app.use('/users', require('./routes/userRoutes'));
+app.use('/client', require('./routes/clientRoutes'));
+app.use('/services', require('./routes/serviceRoutes'));
+app.use('/provider', require('./routes/providerRoutes'));
 app.use('/verification', require('./routes/verificationRoutes'));
 
 // 404 Handler
