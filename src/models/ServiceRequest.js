@@ -23,7 +23,7 @@ const serviceRequestSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['PENDING_PROVIDER_CONFIRMATION', 'ACCEPTED', 'REJECTED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
+        enum: ['PENDING_PROVIDER_CONFIRMATION', 'ACCEPTED', 'REJECTED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED', 'CANCELLED_BY_PROVIDER'],
         default: 'PENDING_PROVIDER_CONFIRMATION'
     },
     scheduled_date: {

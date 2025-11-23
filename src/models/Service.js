@@ -26,6 +26,11 @@ const serviceSchema = new mongoose.Schema({
         default: 'PEN',
         enum: ['PEN', 'USD']
     },
+    status: {
+        type: String,
+        enum: ['ACTIVE', 'PAUSED'],
+        default: 'ACTIVE'
+    },
     rating: {
         type: Number,
         default: 0,
