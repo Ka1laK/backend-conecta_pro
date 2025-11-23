@@ -30,6 +30,13 @@ Backend para la aplicación "Conecta Pro", desarrollado con Node.js, Express y M
     npm run dev
     ```
 
+4.  **Poblar Base de Datos (Data Seeding):**
+    Para tener datos iniciales (Categorías, Servicios, Proveedores, Usuario de prueba), ejecuta:
+    ```bash
+    npm run seed
+    ```
+    *Nota: Esto creará usuarios como 'devon.lane@example.com' (Provider) y 'fara.binladen@example.com' (Client) con contraseña 'password123'.*
+
 ## 📚 Documentación de la API
 
 A continuación se detallan los endpoints disponibles con sus respectivos ejemplos de solicitud y respuesta.
@@ -269,4 +276,187 @@ A continuación se detallan los endpoints disponibles con sus respectivos ejempl
  },
  "errors": []
 }
+```
+
+### 4. Módulo Cliente (Home & Assets)
+
+#### i. Obtener Dashboard (Home)
+**GET** `/client/home`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+**Entrada (Query Params):**
+- `latitude`: Latitud actual (ej. -12.0464)
+- `longitude`: Longitud actual (ej. -77.0428)
+
+**Salida:**
+```json
+{
+  "success": true,
+  "data": {
+    "user": { "id": "usr_123", "full_name": "Fara Bin Laden" },
+    "delivery_address": { "label": "Ate", "full_address": "Av. Los Ingenieros 123..." },
+    "cart": { "items_count": 1 },
+    "categories": [{ "id": "cat_gasfiteria", "name": "Gasfitería" }],
+    "top_services": [{ "id": "srv_001", "title": "Servicio de electricista", "price": 20.0 }]
+  }
+}
+```
+
+#### j. Listar Ubicaciones
+**GET** `/client/locations`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+**Salida:**
+```json
+{
+  "success": true,
+  "data": {
+    "locations": [
+      { "id": "loc_1", "label": "Casa", "full_address": "21B Av Morelli...", "is_default": true }
+    ]
+  }
+}
+```
+
+#### k. Crear Ubicación
+**POST** `/client/locations`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+**Entrada:**
+```json
+{
+  "label": "Casa 2",
+  "full_address": "122C Av La Marina...",
+  "latitude": -12.0865,
+  "longitude": -77.0796,
+  "set_as_default": false
+}
+```
+
+#### l. Métodos de Pago
+**GET** `/client/payment-methods`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+**Salida:**
+```json
+{
+  "success": true,
+  "data": {
+    "payment_methods": [
+      { "id": "pm_cash", "type": "CASH", "label": "Efectivo", "is_default": true }
+    ]
+  }
+}
+```
+
+#### m. Crear Solicitud de Servicio (Booking)
+**POST** `/client/service-request`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+**Entrada:**
+```json
+{
+  "service_id": "srv_010",
+  "location_id": "loc_1",
+  "scheduled_date": "2025-11-25",
+  "scheduled_time_range": { "start": "08:00", "end": "09:00" },
+  "payment_method_id": "pm_cash",
+  "notes": "Traer escalera",
+  "price_summary": { "currency": "PEN", "total": 20.0 }
+}
+```
+
+**Salida:**
+```json
+{
+  "success": true,
+  "message": "Solicitud creada...",
+  "data": {
+    "request_id": "sr_1000",
+    "status": "PENDING_PROVIDER_CONFIRMATION"
+  }
+}
+```
+
+### 5. Módulo Servicios (Catálogo)
+
+#### n. Listar Servicios por Categoría
+**GET** `/categories/:categoryId/services`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+**Entrada (Query Params):**
+- `page`: Número de página (defecto 1)
+- `page_size`: Tamaño de página (defecto 10)
+- `search`: Término de búsqueda (opcional)
+
+#### o. Detalle de Servicio
+**GET** `/services/:serviceId`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+**Salida:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "srv_010",
+    "title": "Revisión de cables...",
+    "provider": { "name": "Marry Jane" },
+    "comments": []
+  }
+}
+```
+
+#### p. Buscar Servicios
+**GET** `/services/search?query=...`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+### 6. Módulo Proveedor
+
+#### q. Listar Solicitudes (Provider)
+**GET** `/provider/service-requests`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+**Entrada (Query Params):**
+- `status`: Filtrar por estado (PENDING_PROVIDER_CONFIRMATION, ACCEPTED, etc.)
+
+#### r. Aceptar Solicitud
+**POST** `/provider/service-requests/:requestId/accept`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+**Entrada:**
+```json
+{ "notes": "Llego en 10 min" }
+```
+
+#### s. Rechazar Solicitud
+**POST** `/provider/service-requests/:requestId/reject`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+**Entrada:**
+```json
+{ "reason": "No disponible" }
+```
+
+### 7. Extensiones de Usuario y Auth
+
+#### t. Perfil de Usuario (Me)
+**GET** `/users/me`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+#### u. Cambiar Contraseña
+**POST** `/auth/change-password`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+**Entrada:**
+```json
+{ "current_password": "old", "new_password": "new" }
+```
+
+#### v. Cerrar Sesión
+**POST** `/auth/logout`
+*Requiere Header:* `Authorization: Bearer <access_token>`
+
+**Entrada:**
+```json
+{ "refresh_token": "..." }
 ```
