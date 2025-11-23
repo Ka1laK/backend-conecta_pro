@@ -405,42 +405,6 @@ A continuación se detallan los endpoints disponibles con sus respectivos ejempl
   }
 }
 ```
-
-#### p. Buscar Servicios
-**GET** `/services/search?query=...`
-*Requiere Header:* `Authorization: Bearer <access_token>`
-
-### 6. Módulo Proveedor
-
-#### q. Listar Solicitudes (Provider)
-**GET** `/provider/service-requests`
-*Requiere Header:* `Authorization: Bearer <access_token>`
-
-**Entrada (Query Params):**
-- `status`: Filtrar por estado (PENDING_PROVIDER_CONFIRMATION, ACCEPTED, etc.)
-
-#### r. Aceptar Solicitud
-**POST** `/provider/service-requests/:requestId/accept`
-*Requiere Header:* `Authorization: Bearer <access_token>`
-
-**Entrada:**
-```json
-{ "notes": "Llego en 10 min" }
-```
-
-#### s. Rechazar Solicitud
-**POST** `/provider/service-requests/:requestId/reject`
-*Requiere Header:* `Authorization: Bearer <access_token>`
-
-**Entrada:**
-```json
-{ "reason": "No disponible" }
-```
-
-### 7. Extensiones de Usuario y Auth
-
-#### t. Perfil de Usuario (Me)
-**GET** `/users/me`
 *Requiere Header:* `Authorization: Bearer <access_token>`
 
 #### u. Cambiar Contraseña
