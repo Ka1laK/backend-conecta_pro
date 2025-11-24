@@ -32,14 +32,13 @@ const locationSchema = new mongoose.Schema({
 });
 
 // Ensure only one default location per user
-locationSchema.pre('save', async function (next) {
+locationSchema.pre('save', async function () {
     if (this.is_default) {
         await this.constructor.updateMany(
             { user: this.user, _id: { $ne: this._id } },
             { is_default: false }
         );
     }
-    next();
 });
 
 module.exports = mongoose.model('Location', locationSchema);
