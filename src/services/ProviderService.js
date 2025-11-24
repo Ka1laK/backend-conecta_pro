@@ -274,14 +274,31 @@ class ProviderService {
             .limit(pageSize);
 
         const formattedRequests = requests.map(r => ({
-            request_id: r._id,
-            service_title: r.service.title,
-            client_name: r.client.full_name,
-            client_avatar_url: r.client.avatar_url || 'https://cdn.serviconecta.com/avatars/default.jpg',
-            location: r.location.full_address,
-            scheduled_date: r.scheduled_date,
-            time_range: r.scheduled_time_range,
-            status: r.status
+        request_id: r._id.toString(),
+
+        client: {
+            id: r.client?._id?.toString() || null,
+            name: r.client?.full_name || null
+        },
+
+        service: {
+            id: r.service?._id?.toString() || null,
+            title: r.service?.title || null
+        },
+
+        scheduled_date: r.scheduled_date,
+        
+        scheduled_time_range: {
+            start: r.scheduled_time_range?.start || null,
+            end: r.scheduled_time_range?.end || null
+        },
+
+        price_summary: {
+            currency: r.service?.currency || "PEN", // fallback
+            total: r.service?.price || 0
+        },
+
+        status: r.status
         }));
 
         return {
